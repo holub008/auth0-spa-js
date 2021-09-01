@@ -459,7 +459,7 @@ export default class Auth0Client {
       client_id: this.options.client_id
     };
 
-    console.log(`cacheEntry: ${cacheEntry}`);
+    console.log(`cacheEntry: ${JSON.stringify(cacheEntry)}`);
 
     await this.cacheManager.set(cacheEntry);
 
