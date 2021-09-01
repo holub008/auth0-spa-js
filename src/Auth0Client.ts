@@ -801,6 +801,13 @@ export default class Auth0Client {
 
     await this.loginWithPopup(options, config);
 
+    console.log(
+      `loginWithPopup trying to get ${new CacheKey({
+        scope: options.scope,
+        audience: options.audience || 'default',
+        client_id: this.options.client_id
+      }).toKey()}`
+    );
     const cache = await this.cacheManager.get(
       new CacheKey({
         scope: options.scope,
@@ -808,6 +815,8 @@ export default class Auth0Client {
         client_id: this.options.client_id
       })
     );
+
+    console.log(`loginWithPopup got ${JSON.stringify(cache)}`);
 
     return cache.access_token;
   }
