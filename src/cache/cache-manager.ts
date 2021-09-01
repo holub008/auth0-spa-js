@@ -32,12 +32,17 @@ export class CacheManager {
     if (!wrappedEntry) {
       const keys = await this.getCacheKeys();
 
+      console.log(`cache manager getCacheKeys: ${JSON.stringify(keys)}`);
+
       if (!keys) return;
 
       const matchedKey = this.matchExistingCacheKey(cacheKey, keys);
+      console.log(`cache manager matchedKey: ${JSON.stringify(matchedKey)}`);
+
       wrappedEntry = await this.cache.get<WrappedCacheEntry>(matchedKey);
     }
 
+    console.log(`cache manager wrappedEntry: ${JSON.stringify(wrappedEntry)}`);
     // If we still don't have an entry, exit.
     if (!wrappedEntry) {
       return;
@@ -45,7 +50,13 @@ export class CacheManager {
 
     const nowSeconds = Math.floor(Date.now() / 1000);
 
+    console.log(
+      `cache wrapped entry expiry test: ${
+        wrappedEntry.expiresAt - expiryAdjustmentSeconds
+      } < ${nowSeconds}`
+    );
     if (wrappedEntry.expiresAt - expiryAdjustmentSeconds < nowSeconds) {
+      console.log(`cache now appending a refresh token`);
       if (wrappedEntry.body.refresh_token) {
         wrappedEntry.body = {
           refresh_token: wrappedEntry.body.refresh_token
@@ -55,7 +66,12 @@ export class CacheManager {
         return wrappedEntry.body;
       }
 
+      console.log(`cache now removing ${JSON.stringify(cacheKey.toKey())}`);
       await this.cache.remove(cacheKey.toKey());
+      console.log(
+        `cache keyManifest now removing ${JSON.stringify(cacheKey.toKey())}`
+      );
+
       await this.keyManifest?.remove(cacheKey.toKey());
 
       return;
@@ -73,12 +89,18 @@ export class CacheManager {
 
     const wrappedEntry = this.wrapCacheEntry(entry);
 
+    console.log(
+      `writing ${JSON.stringify(wrappedEntry)} at key ${cacheKey.toKey()}`
+    );
+
     await this.cache.set(cacheKey.toKey(), wrappedEntry);
     await this.keyManifest?.add(cacheKey.toKey());
   }
 
   async clear(): Promise<void> {
     const keys = await this.getCacheKeys();
+
+    console.log(`!!!cache was cleared!!!`);
 
     /* istanbul ignore next */
     if (!keys) return;
@@ -119,6 +141,7 @@ export class CacheManager {
   }
 
   private async getCacheKeys(): Promise<string[]> {
+    console.log(`getCacheKeys: using manifest: ${this.keyManifest}`);
     return this.keyManifest
       ? (await this.keyManifest.get())?.keys
       : await this.cache.allKeys();

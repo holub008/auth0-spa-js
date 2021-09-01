@@ -419,6 +419,8 @@ export default class Auth0Client {
         DEFAULT_AUTHORIZE_TIMEOUT_IN_SECONDS
     });
 
+    console.log(`codeResult: ${JSON.stringify(codeResult)}`);
+
     if (stateIn !== codeResult.state) {
       throw new Error('Invalid state');
     }
@@ -439,6 +441,8 @@ export default class Auth0Client {
       this.worker
     );
 
+    console.log(`authResult: ${JSON.stringify(authResult)}`);
+
     const organizationId = options.organization || this.options.organization;
 
     const decodedToken = this._verifyIdToken(
@@ -454,6 +458,8 @@ export default class Auth0Client {
       audience: params.audience || 'default',
       client_id: this.options.client_id
     };
+
+    console.log(`cacheEntry: ${cacheEntry}`);
 
     await this.cacheManager.set(cacheEntry);
 

@@ -27,6 +27,9 @@ export async function oauthToken(
     ? createQueryParams(options)
     : JSON.stringify(options);
 
+  console.log(`oauthToken body: ${body}`);
+  console.log(`oauthToken worker: ${worker}`);
+
   return await getJSON<TokenEndpointResponse>(
     `${baseUrl}/oauth/token`,
     timeout,

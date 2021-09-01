@@ -76,6 +76,7 @@ export const switchFetch = async (
   useFormData?: boolean,
   timeout = DEFAULT_FETCH_TIMEOUT_MS
 ): Promise<any> => {
+  console.log(`switchFetch: fetching with worker is ${!!worker}`);
   if (worker) {
     return fetchWithWorker(
       fetchUrl,
@@ -122,6 +123,7 @@ export async function getJSON<T>(
       // with the failure in the body.
       // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
       fetchError = e;
+      console.log(`encountered a fetch error ${e.toString()} ${e.stack}`);
     }
   }
 
@@ -141,6 +143,7 @@ export async function getJSON<T>(
     const errorMessage =
       error_description || `HTTP error. Unable to fetch ${url}`;
 
+    console.log(`encountered a generic error in fetching ${errorMessage}`);
     throw new GenericError(error || 'request_error', errorMessage);
   }
 
