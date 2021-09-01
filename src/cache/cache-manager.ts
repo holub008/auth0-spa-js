@@ -29,6 +29,13 @@ export class CacheManager {
       cacheKey.toKey()
     );
 
+    console.log(
+      `cache manager trying to get: ${JSON.stringify(cacheKey.toKey())}`
+    );
+    console.log(
+      `cache manager original wrappedEntry: ${JSON.stringify(wrappedEntry)}`
+    );
+
     if (!wrappedEntry) {
       const keys = await this.getCacheKeys();
 
@@ -42,7 +49,9 @@ export class CacheManager {
       wrappedEntry = await this.cache.get<WrappedCacheEntry>(matchedKey);
     }
 
-    console.log(`cache manager wrappedEntry: ${JSON.stringify(wrappedEntry)}`);
+    console.log(
+      `cache manager new wrappedEntry: ${JSON.stringify(wrappedEntry)}`
+    );
     // If we still don't have an entry, exit.
     if (!wrappedEntry) {
       return;
