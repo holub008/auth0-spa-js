@@ -138,7 +138,7 @@ export class CacheManager {
   private wrapCacheEntry(entry: CacheEntry): WrappedCacheEntry {
     const expiresInTime = Math.floor(Date.now() / 1000) + entry.expires_in;
 
-    console.log(`wrapCacheEntry entry expires_in: ${(entry, expirse_in)}`);
+    console.log(`wrapCacheEntry entry expires_in: ${entry.expires_in}`);
     console.log(`wrapCacheEntry expiresInTime: ${expiresInTime}`);
     console.log(`wrapCacheEntry claims.exp ${entry.decodedToken.claims.exp}`);
 
